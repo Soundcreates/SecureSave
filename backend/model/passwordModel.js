@@ -1,4 +1,4 @@
-const mongoose = requrie('mongoose');
+const mongoose = require('mongoose');
 
 const passwordSchema = mongoose.Schema({
   password: String,
@@ -9,7 +9,8 @@ const passwordSchema = mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-  }
+  },
+  website: String,
 })
 
 module.exports = mongoose.model('password', passwordSchema);

@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes.js');
 const connectDB = require('./config/connectDB.js')
+const passwordRoutes = require('./routes/passwordRoutes.js');
 
 
 dotenv.config();
@@ -18,6 +19,8 @@ connectDB();
 console.log('cors applied');
 
 app.use('/api/auth', authRoutes);
+
+app.use('/api/password', passwordRoutes);
 
 
 app.listen(process.env.PORT, () => {
