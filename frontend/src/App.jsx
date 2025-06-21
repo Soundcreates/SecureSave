@@ -5,6 +5,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoutes from "./context/ProtectedRoutes";
+import SideBar from "./components/SideBar";
+import AddPasswordModal from "./components/AddPasswordModal";
 
 function App() {
   return (
