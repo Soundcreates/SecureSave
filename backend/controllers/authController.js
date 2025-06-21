@@ -67,12 +67,13 @@ module.exports.loginController = async (req, res) => {
 module.exports.getMe = async (req, res) => {
   const authHeader = req.headers.authorization;
 
-  try {
-    if (!authHeader || !authHeader.startsWith('Bearer')) {
-      return res.status(400).json({ message: "No token provided!" });
-    }
 
-    const token = authHeader.split(" ")[1];
+  if (!authHeader || !authHeader.startsWith('Bearer')) {
+    return res.status(401).json({ message: "No token provided!" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  try {
     const decoded = jwt.verify(token, process.env.JWT_KEY);
     const user = decoded.id;
 

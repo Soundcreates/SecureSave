@@ -6,3 +6,5 @@ const authMiddleware = require('../middleware/authMiddleware.js');
 passwordRoutes.post('/addPassword', authMiddleware, addPassword);
 
 passwordRoutes.get('/fetchPasswords', authMiddleware, fetchPasswords);
+
+module.exports = passwordRoutes;

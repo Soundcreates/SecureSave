@@ -28,11 +28,11 @@ function Login() {
           setError(response.data.message);
           const token = response.data.token;
           localStorage.setItem("token", token);
+          navigate("/dashboard");
           console.log(
             "local storage is applied and token is: ",
             localStorage.getItem("token")
           );
-          navigate("/dashboard");
         } else if (response.status === 400) {
           setError(response.data.message);
           setFormData({

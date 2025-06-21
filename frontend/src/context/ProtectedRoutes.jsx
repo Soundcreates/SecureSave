@@ -1,19 +1,15 @@
 import React from "react";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, Navigate } from "react-router";
 import { useAuth } from "./AuthContext";
-import { useEffect } from "react";
 
 function ProtectedRoutes() {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loader } = useAuth();
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/");
-    }
-  }, [user, navigate]);
+  if (loader) {
+    return <div className="mt-10 text-center">Loading...</div>;
+  }
 
-  return user ? <Outlet /> : null;
+  return user ? <Outlet /> : <Navigate to="/" replace />;
 }
 
 export default ProtectedRoutes;

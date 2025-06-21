@@ -9,7 +9,7 @@ function Dashboard() {
 
   if (loader) return <div>...Loading</div>;
   if (!user) return <div>No user found, log in please</div>;
-  return <div>{user._id}</div>;
+  return <div>{user.username}</div>;
 }
 
 export default Dashboard;

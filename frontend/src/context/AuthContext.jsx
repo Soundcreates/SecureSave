@@ -18,6 +18,8 @@ export const AuthProvider = ({ children }) => {
         setUser(response.data.currentUser);
       } catch (err) {
         console.log(err.message);
+        setUser(null);
+        localStorage.removeItem("token");
       } finally {
         setLoader(false);
       }

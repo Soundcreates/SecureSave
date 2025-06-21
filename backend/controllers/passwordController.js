@@ -12,10 +12,7 @@ module.exports.addPassword = async (req, res) => {
   const hashedPassword = crypto.AES.encrypt(password, aes);
   const encryptedWeb = crypto.AES.encrypt(website)
 
-  const authHeader = req.headers.authorization;
-  const token = authHeader.slice(" ")[1];
-  const decoded = jwt.verify(token, process.env.JWT_KEY);
-  const userId = decoded.id;
+  const userId = req.user.id;
 
   const user = await userModel.findById(userId).populate('passwords');
   user.passwords.push({ password: hashedPassword, website: encryptedWeb });
@@ -24,13 +21,8 @@ module.exports.addPassword = async (req, res) => {
 }
 
 module.exports.fetchPasswords = async (req, res) => {
-  const authHeader = req.header.authorization;
   try {
-
-    const token = authHeader.split(" ")[1];
-
-    const decoded = jwt.verify(token, process.env.JWT_KEY);
-    const userId = decoded.id;
+    const userId = req.user.id;
 
     const passwords = passwordModel.find({ author: userId });
 
