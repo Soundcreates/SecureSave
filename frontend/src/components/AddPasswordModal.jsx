@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { api } from "../services/api";
-import { useNavigate } from "react-router";
+
+import { usePassword } from "../context/passwordContext";
 
 function AddPasswordModal({ setOpenForm }) {
   const [formData, setFormData] = useState({
@@ -8,25 +8,14 @@ function AddPasswordModal({ setOpenForm }) {
     username: "",
     password: "",
   });
-  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const { handleAdd } = usePassword();
+
+  function handleSubmit(e) {
     e.preventDefault();
-    try {
-      const res = await api.post("/api/password/addPassword", formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      if (res.status === 200) {
-        setOpenForm(false);
-      } else if (res.status === 500) {
-        alert(res.data.message);
-      }
-    } catch (err) {
-      console.log("Add Password Error: ", err.message);
-    }
-  };
+    handleAdd(formData.password, formData.website, formData.username);
+    setOpenForm(false);
+  }
 
   function handleClose() {
     setFormData({ website: "", username: "", password: "" });

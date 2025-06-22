@@ -7,18 +7,21 @@ import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoutes from "./context/ProtectedRoutes";
 import SideBar from "./components/SideBar";
 import AddPasswordModal from "./components/AddPasswordModal";
+import { PasswordProvider } from "./context/passwordContext";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route element={<ProtectedRoutes />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Route>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
+        <PasswordProvider>
+          <Routes>
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+            <Route path="/" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </PasswordProvider>
       </AuthProvider>
     </BrowserRouter>
   );

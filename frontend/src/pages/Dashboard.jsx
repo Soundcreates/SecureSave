@@ -4,11 +4,19 @@ import { useNavigate } from "react-router";
 import SideBar from "../components/SideBar";
 import Card from "../components/Card";
 import AddPasswordModal from "../components/AddPasswordModal";
+import { useEffect } from "react";
+import { usePassword } from "../context/passwordContext";
 
 function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [openForm, setOpenForm] = useState(false);
+
+  const { handleFetch, passwords } = usePassword();
+
+  useEffect(() => {
+    handleFetch();
+  }, [handleFetch]);
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-[#D3ECCD] to-white font-Playfair">
@@ -38,7 +46,17 @@ function Dashboard() {
           {/* Password Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Sample password card */}
-            <Card website="netflix" password="******" username="shantanav" />
+            {passwords.map((p) => {
+              return (
+                <Card
+                  key={p._id}
+                  id={p._id}
+                  password={p.password}
+                  website={p.website}
+                  username={p.username}
+                />
+              );
+            })}
             {/* ⬆️ Repeat this card dynamically with map() */}
           </div>
         </section>
