@@ -7,6 +7,6 @@ passwordRoutes.post('/addPassword', authMiddleware, addPassword);
 
 passwordRoutes.get('/fetchPasswords', authMiddleware, fetchPasswords);
 
-passwordRoutes.delete('/deletePassword/:id', authMiddleware, deletePassword);
+passwordRoutes.delete('/deletePassword/:passwordId', authMiddleware, deletePassword);
 
 module.exports = passwordRoutes;

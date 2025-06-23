@@ -36,6 +36,7 @@ export function PasswordProvider({ children }) {
       }
     );
     setPassword((prev) => [...prev, response.data.password]);
+    console.log(response.data.password);
   };
 
   //delete password
@@ -48,6 +49,7 @@ export function PasswordProvider({ children }) {
         },
       }
     );
+    setPassword((prev) => prev.filter((item) => item._id !== passwordId));
   };
 
   return (

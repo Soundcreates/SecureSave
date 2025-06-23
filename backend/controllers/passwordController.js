@@ -4,14 +4,14 @@ const userModel = require('../model/userModel');
 const passwordModel = require('../model/passwordModel');
 
 
-const aes = process.env.AES_KEY;
+
 
 module.exports.addPassword = async (req, res) => {
   const { password, website, username } = req.body;
 
   try {
-    const hashedPassword = crypto.AES.encrypt(password, aes).toString();
-    const encryptedWeb = crypto.AES.encrypt(website, aes).toString();
+    const hashedPassword = crypto.AES.encrypt(password, process.env.AES_KEY).toString();
+    const encryptedWeb = crypto.AES.encrypt(website, process.env.AES_KEY).toString();
 
     const userId = req.user.id;
 
@@ -40,29 +40,50 @@ module.exports.fetchPasswords = async (req, res) => {
 
     const passwords = await passwordModel.find({ author: userId });
 
-    res.status(200).json({ passwords });
+    const decryptedPasswords = passwords.map(pwd => {
+      const decryptedPassword = crypto.AES.decrypt(pwd.password, process.env.AES_KEY).toString(crypto.enc.Utf8);
+      const decryptedWebsite = crypto.AES.decrypt(pwd.website, process.env.AES_KEY).toString(crypto.enc.Utf8);
+
+      return {
+        _id: pwd._id,
+        website: decryptedWebsite,
+        password: decryptedPassword,
+        username: pwd.username,
+        author: pwd.author,
+      };
+    });
+
+    res.status(200).json({ passwords: decryptedPasswords });
   } catch (err) {
-    console.log(err.message);
-    res.status(500).json({ message: "Internal server error , please try again later" });
-
+    console.error("Decryption Error:", err.message);
+    res.status(500).json({ message: "Internal server error, please try again later" });
   }
+};
 
-}
 
 module.exports.deletePassword = async (req, res) => {
   try {
     const userId = req.user.id;
     const passwordId = req.params.passwordId;
 
-    const foundPassword = await passwordModel.findByIdAndDelete(passwordId);
-    const user = await userModel.findById(userId).populate('passwords');
-    user.passwords = user.passwords.filter(password => password._id.toString() !== passwordId);
-    await user.save();
+    // First delete the password from the password collection
+    const deletedPassword = await passwordModel.findByIdAndDelete(passwordId);
+    if (!deletedPassword) {
+      return res.status(404).json({ message: "Password not found" });
+    }
+
+    // Then update the user's passwords array
+    const user = await userModel.findById(userId).populate("passwords");
+    if (user && user.passwords && Array.isArray(user.passwords)) {
+      user.passwords = user.passwords.filter(
+        (password) => password._id.toString() !== passwordId
+      );
+      await user.save();
+    }
 
     return res.status(200).json({ message: "Password deleted successfully" });
   } catch (err) {
-    console.log(err.message);
-    return res.status(500).json({ message: "Internal server error, please try again later" });
+    console.error("Delete error:", err.message);
+    return res.status(500).json({ message: "Internal server error" });
   }
-
-}
+};

@@ -3,7 +3,11 @@ import { usePassword } from "../context/passwordContext";
 
 function Card({ id, website, password, username }) {
   const { handleDelete } = usePassword();
-  handleDelete(id);
+
+  const handleClick = async () => {
+    await handleDelete(id);
+    console.log("deleted");
+  };
 
   return (
     <div className="bg-[#D3ECCD] p-4 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200">
@@ -11,7 +15,7 @@ function Card({ id, website, password, username }) {
       <p className="text-sm text-gray-700">Username: {username}</p>
       <p className="text-sm text-gray-700">Password: {password}</p>
       <button
-        onClick={handleDelete}
+        onClick={handleClick}
         className="mt-3 text-red-600 font-semibold hover:underline cursor-pointer"
       >
         Delete
